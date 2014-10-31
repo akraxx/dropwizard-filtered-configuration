@@ -5,6 +5,10 @@ A way to launch dropwizard with an environment arg which will filter your config
 
 ======
 
+To launch the current example with mvn : mvn clean install
+
+======
+
 Arguments to launch the dropwizard :
 
 serverenv -e [dev,stg,acc,prod] properties.yml
