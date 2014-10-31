@@ -7,9 +7,9 @@ A way to launch dropwizard with an environment arg which will filter your config
 
 Arguments to launch the dropwizard :
 
-server -e [dev,stg,acc,prod] properties.yml
+serverenv -e [dev,stg,acc,prod] properties.yml
 
-server --environment [dev,stg,acc,prod] properties.yml
+serverenv --environment [dev,stg,acc,prod] properties.yml
 
 The file [env].yml must be in the folder "filters" in the resources folder.
 
