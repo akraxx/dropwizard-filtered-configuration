@@ -26,6 +26,6 @@ public class ExampleApplication extends Application<ExampleConfiguration> {
     }
 
     public static void main(String[] args) throws Exception {
-        new ExampleApplication().run(new String[] {"serverenv", "-e", "dev", "properties.yml"});
+        new ExampleApplication().run(new String[] {"serverenv", "-e", "stg", "properties.yml"});
     }
 }

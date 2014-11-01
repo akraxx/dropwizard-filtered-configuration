@@ -1,7 +1,7 @@
 package fr.mmarie.filtered.commands;
 
-import fr.mmarie.filtered.configurations.EnvironmentConfiguration;
 import io.dropwizard.Application;
+import io.dropwizard.Configuration;
 import io.dropwizard.setup.Environment;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  *
  * @param <T> the {@link io.dropwizard.Configuration} subclass which is loaded from the configuration file
  */
-public class ServerEnvironmentCommand<T extends EnvironmentConfiguration> extends EnvironmentCommand<T> {
+public class ServerEnvironmentCommand<T extends Configuration> extends EnvironmentCommand<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(io.dropwizard.cli.ServerCommand.class);
 
     private final Class<T> configurationClass;

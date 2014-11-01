@@ -1,1 +1,8 @@
 testEnv: stg
+
+# Logging settings.
+logging:
+
+  # Logger-specific levels.
+  loggers:
+    org.eclipse.jetty.util: ALL

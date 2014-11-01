@@ -3,11 +3,11 @@ server:
 #  hardNofileLimit: 1000
   applicationConnectors:
     - type: http
-      port: 9095
+      port: 9099
 
   adminConnectors:
     - type: http
-      port: 9091
+      port: 9098
 
 # Logging settings.
 logging:

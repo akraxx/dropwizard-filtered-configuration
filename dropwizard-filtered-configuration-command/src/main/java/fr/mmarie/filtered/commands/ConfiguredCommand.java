@@ -2,7 +2,6 @@ package fr.mmarie.filtered.commands;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fr.mmarie.filtered.configurations.EnvironmentConfiguration;
 import fr.mmarie.filtered.configurations.factories.FilteredConfigurationFactory;
 import fr.mmarie.filtered.configurations.factories.FilteredConfigurationFactoryFactory;
 import fr.mmarie.filtered.source.ResourceConfigurationSourceProvider;
@@ -32,7 +31,7 @@ import java.io.IOException;
  */
 @Getter
 @Slf4j
-public abstract class ConfiguredCommand<T extends EnvironmentConfiguration> extends Command {
+public abstract class ConfiguredCommand<T extends Configuration> extends Command {
     private boolean asynchronous;
 
     private T configuration;

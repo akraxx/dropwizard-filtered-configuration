@@ -17,18 +17,19 @@ import com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.YAMLException;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
-import fr.mmarie.filtered.configurations.EnvironmentConfiguration;
-import fr.mmarie.filtered.configurations.FilteredConfiguration;
+import io.dropwizard.Configuration;
 import io.dropwizard.configuration.ConfigurationException;
 import io.dropwizard.configuration.ConfigurationFactory;
 import io.dropwizard.configuration.ConfigurationSourceProvider;
 import io.dropwizard.configuration.ConfigurationValidationException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,7 +48,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @param <T> the type of the configuration objects to produce
  */
 @Slf4j
-public class FilteredConfigurationFactory<T extends EnvironmentConfiguration> extends ConfigurationFactory<T> {
+public class FilteredConfigurationFactory<T extends Configuration> extends ConfigurationFactory<T> {
     private final Class<T> klass;
     private final String propertyPrefix;
     private final ObjectMapper mapper;
@@ -85,10 +86,15 @@ public class FilteredConfigurationFactory<T extends EnvironmentConfiguration> ex
      * @throws io.dropwizard.configuration.ConfigurationException if there is an error parsing or validating the file
      */
     public T build(ConfigurationSourceProvider provider, String path, String env) throws IOException, ConfigurationException {
-        try (InputStream input = provider.open(checkNotNull(path))) {
-            final JsonNode node = mapper.readTree(yamlFactory.createParser(input));
+        try (InputStream inputCommonFile = provider.open(checkNotNull(path))) {
+            try (InputStream inputEnvFile = provider.open("filters/".concat(checkNotNull(env)).concat(".yml"))) {
+                String commonProperties = IOUtils.toString(inputCommonFile, "UTF-8");
+                String envProperties = IOUtils.toString(inputEnvFile, "UTF-8");
 
-            return build(node, path, env);
+                final JsonNode node = mapper.readTree(yamlFactory.createParser(String.format("%s%n%s", commonProperties, envProperties)));
+
+                return build(node, path, env);
+            }
         } catch (YAMLException e) {
             ConfigurationParsingException.Builder builder = ConfigurationParsingException
                     .builder("Malformed YAML")
@@ -125,19 +131,6 @@ public class FilteredConfigurationFactory<T extends EnvironmentConfiguration> ex
 
         try {
             final T config = mapper.readValue(new TreeTraversingParser(node), klass);
-
-            try {
-                ObjectMapper ymlMapper = new ObjectMapper(yamlFactory);
-
-                FilteredConfiguration filteredConfiguration = (FilteredConfiguration) ymlMapper.readValue(getClass()
-                                .getResourceAsStream("/filters/".concat(env).concat(".yml")),
-                        config.getFilteredConfigurationClass());
-
-                config.setFilteredConfiguration(filteredConfiguration);
-            } catch (Exception e) {
-                log.error("Impossible to get or parse the file /filters/{}.yml. Verify you added it into your resources folder", env);
-                throw e;
-            }
 
             validate(path, config);
             return config;

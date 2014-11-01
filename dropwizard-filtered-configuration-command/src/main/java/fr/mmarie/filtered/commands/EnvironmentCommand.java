@@ -1,7 +1,7 @@
 package fr.mmarie.filtered.commands;
 
-import fr.mmarie.filtered.configurations.EnvironmentConfiguration;
 import io.dropwizard.Application;
+import io.dropwizard.Configuration;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -12,7 +12,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
  * @param <T> the {@link io.dropwizard.Configuration} subclass which is loaded from the configuration file
  * @see io.dropwizard.Configuration
  */
-public abstract class EnvironmentCommand<T extends EnvironmentConfiguration> extends ConfiguredCommand<T> {
+public abstract class EnvironmentCommand<T extends Configuration> extends ConfiguredCommand<T> {
     private final Application<T> application;
 
     /**

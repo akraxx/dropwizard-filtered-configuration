@@ -1,1 +1,8 @@
 testEnv: dev
+
+metrics:
+  frequency: 2 seconds
+  reporters:
+    - type: console
+      timeZone: CET
+      output: stdout
